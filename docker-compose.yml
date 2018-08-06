@@ -1,0 +1,27 @@
+version: '3'
+services:
+  prices-service:
+    build: ./prices-service
+    ports:
+      - "9292:9292"
+    depends_on:
+      - routes-service
+    environment:
+      routes_service_url: routes-service
+
+  routes-service:
+    build: ./routes-service
+    ports:
+      - "8080:8080"
+    environment:
+      - DEV_WITH_DOCKER=true
+      - DATA_SOURCES=google_matrix,google_directions
+      - GOOGLE_MATRIX_API_KEY=AIzaSyAfJstHeyGhJ8_JUNx0dwciclq8zR-Nv_8
+      - GOOGLE_DIRECTIONS_API_KEY=AIzaSyAfJstHeyGhJ8_JUNx0dwciclq8zR-Nv_8
+
+# Это не обязательный параметр,
+# просто без него у меня не уходили запросы во внешний сервис
+    dns:
+      - 192.168.15.1
+      - 8.8.8.8
+      - 9.9.9.9
